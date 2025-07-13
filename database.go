@@ -12,7 +12,7 @@ var notas []NotaFiscal // variável global para armazenar as notas
 func LoadNotasFiscais() {
 	file, err := os.Open("itens.json")
 	if err != nil {
-		log.Fatal("Erro ao abrir o arquivo JSON: %v", err)
+		log.Fatalf("Erro ao abrir o arquivo JSON: %v", err)
 	}
 
 	defer file.Close()

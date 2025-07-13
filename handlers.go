@@ -6,23 +6,23 @@ import (
 	"strings"
 )
 
-func GetItensNotaHandler( w http.ResponseWriter, r *http.Request) {
+func GetItensNotaHandler(w http.ResponseWriter, r *http.Request) {
 	parts := strings.Split(r.URL.Path, "/")
-	if  len(parts) != 4 || parts[1] != "notas" || parts[3] != "itens" {
+	if len(parts) != 4 || parts[1] != "notas" || parts[3] != "itens" {
 		http.Error(w, "Rota inválida", http.StatusNotFound)
 		return
 	}
 
 	numero := parts[2]
 
-	var notaID  int
+	var notaID int
 	err := DB.QueryRow("SELECT id FROM notas_fiscais WHERE numero = ?", numero).Scan(&notaID)
 	if err != nil {
 		http.Error(w, "Nota fiscais não encontrada", https.StatusNotFound)
 		return
 	}
 
-	error, err := DB.Query(
+	rows, err := DB.Query(
 		`SELECT id, descricao, quantidade, valor_unitario
 		FROM itens_nota WHERE nota_id = ?`, notaID)
 	if err != nil {
@@ -32,9 +32,11 @@ func GetItensNotaHandler( w http.ResponseWriter, r *http.Request) {
 
 	defer rows.Close()
 
-	var itens []ItemNotafor rows.Next() {
+	var itens []ItemNota
+	for rows.Next() {
 		var item ItemNota
-		err := != nil {
+		err := rows.Scan(&item.ID, &item.Descricao, &item.Quantidade, &item.ValorUnitario)
+		if err != nil {
 			http.Error(w, "Erro ao ler dados", http.StatusInternalServerError)
 			return
 		}

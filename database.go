@@ -1,54 +1,32 @@
 package main
 
 import (
-	"database/sql"
+	"encoding/json"
+	"io/ioutil"
 	"log"
-
-	_ "github.com/mattn/go-sqlite3"
+	"os"
 )
 
-var DB *sql.DB
+var notas []NotaFiscal // variável global para armazenar as notas
 
-func InitDatadabe() {
-	var err error
-	DB, err = sql.Open("sqlite3", "./notas.db")
+func LoadNotasFiscais() {
+	file, err := os.Open("itens.json")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Erro ao abrir o arquivo JSON: %v", err)
 	}
 
-	createTables()
+	defer file.Close()
 
-	//Inserir exemplos
-
-	DB.Exec("INSERT OR IGNORE INTO notas_fiscais (numero) VALUES (?)", "123456")
-	DB.Exec("INSERT INTO itens_nota (nota_id, descricao, quantidade, valor_unitario) VALUES (?,?,?,?)", 1, "Produto A", 2, 10.0)
-}
-
-func createTables() {
-	createNotas := `
-	CREATE TABLE IF NOT EXISTS notas_fiscais (
-	id INTEGER PRIMARY KEY AUTOINCREMENT, 
-	numero TEXT NOT NULL UNIQUE
-	);`
-
-	createItens := `
-	CREATE TABLE IF NOT EXISTS itens_nota (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	nota_id INTEGER,
-	descricao TEXT,
-	quantidade INTEGER,
-	valor_unitario REAL,
-	FOREIGN KEY(nota_id) REFERENCES notas_fiscais(id)
-	);`
-
-	_, err := DB.Exec(createNotas)
+	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		log.Fatal("Erro criando tabela notas_fiscais:", err)
+		log.Fatalf("Erro ao ler o arquivo JSON: %v", err)
 	}
 
-	_, err = DB.Exec(createItens)
+	err = json.Unmarshal(bytes, &notas)
 	if err != nil {
-		log.Fatal("Erro criando tabela itens_nota:", err)
+		log.Fatalf("Erro ao converter JSON para struct: %v", err)
 	}
+
+	log.Println("NOtas fiscais carregadas com sucesso")
 
 }

@@ -15,36 +15,37 @@ func GetItensNotaHandler(w http.ResponseWriter, r *http.Request) {
 
 	numero := parts[2]
 
-	var notaID int
-	err := DB.QueryRow("SELECT id FROM notas_fiscais WHERE numero = ?", numero).Scan(&notaID)
-	if err != nil {
-		http.Error(w, "Nota fiscais não encontrada", http.StatusNotFound)
-		return
-	}
-
-	rows, err := DB.Query(
-		`SELECT id, descricao, quantidade, valor_unitario
-		FROM itens_nota WHERE nota_id = ?`, notaID)
-	if err != nil {
-		http.Error(w, "Erro ao buscar itens", http.StatusInternalServerError)
-		return
-	}
-
-	defer rows.Close()
-
-	var itens []ItemNota
-	for rows.Next() {
-		var item ItemNota
-		err := rows.Scan(&item.ID, &item.Descricao, &item.Quantidade, &item.ValorUnitario)
-		if err != nil {
-			http.Error(w, "Erro ao ler dados", http.StatusInternalServerError)
-			return
+	// Buscar a nota fiscal pelo número
+	var notaEncontrada *NotaFiscal
+	for i := range notas {
+		if notas[i].NumeroNota == numero {
+			notaEncontrada = &notas[i]
+			break
 		}
+	}
 
-		itens = append(itens, item)
+	if notaEncontrada == nil {
+		http.Error(w, "Nota fiscal não encontrada", http.StatusNotFound)
+		return
+	}
 
+	// Filtrar itens com quantidade e valor > 0
+	var itensValidos []Item
+	for _, item := range notaEncontrada.Itens {
+		if item.Quantidade > 0 && item.ValorUnitario > 0 {
+			itensValidos = append(itensValidos, item)
+		}
+	}
+
+	// Montar resposta no formato exigido
+	resposta := struct {
+		NumeroNota string `json:"numero_nota"`
+		Itens      []Item `json:"itens"`
+	}{
+		NumeroNota: notaEncontrada.NumeroNota,
+		Itens:      itensValidos,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(itens)
+	json.NewEncoder(w).Encode(resposta)
 }

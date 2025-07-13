@@ -9,5 +9,5 @@ type Item struct {
 
 type NotaFiscal struct {
 	NumeroNota string `json:"numero_nota"`
-	Item       []Item `json:"itens"`
+	Itens      []Item `json:"itens"`
 }

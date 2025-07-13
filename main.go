@@ -10,6 +10,8 @@ func main() {
 
 	http.HandleFunc("/notas/", GetItensNotaHandler)
 
+	http.HandleFunc("/health", HealthCheckHandler)
+
 	log.Println("API rodando em http://localhost:8080")
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {

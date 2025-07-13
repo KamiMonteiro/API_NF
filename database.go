@@ -27,18 +27,18 @@ func InitDatadabe() {
 func createTables() {
 	createNotas := `
 	CREATE TABLE IF NOT EXISTS notas_fiscais (
-	id INYEGER PRIMARY KEY AUTOINCREMENT, 
+	id INTEGER PRIMARY KEY AUTOINCREMENT, 
 	numero TEXT NOT NULL UNIQUE
 	);`
 
 	createItens := `
-	CREATE TABLE IF NOT EXIST itens_nota(
+	CREATE TABLE IF NOT EXISTS itens_nota (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	nota_id INTEGER,
 	descricao TEXT,
 	quantidade INTEGER,
 	valor_unitario REAL,
-	FOREING KEY(nota_id) REFERENCES notas_fiscais(id)
+	FOREIGN KEY(nota_id) REFERENCES notas_fiscais(id)
 	);`
 
 	_, err := DB.Exec(createNotas)
@@ -48,7 +48,7 @@ func createTables() {
 
 	_, err = DB.Exec(createItens)
 	if err != nil {
-		log.Fatal("Erro criando tabela itens_notas:", err)
+		log.Fatal("Erro criando tabela itens_nota:", err)
 	}
 
 }

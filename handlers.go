@@ -18,7 +18,7 @@ func GetItensNotaHandler(w http.ResponseWriter, r *http.Request) {
 	var notaID int
 	err := DB.QueryRow("SELECT id FROM notas_fiscais WHERE numero = ?", numero).Scan(&notaID)
 	if err != nil {
-		http.Error(w, "Nota fiscais não encontrada", https.StatusNotFound)
+		http.Error(w, "Nota fiscais não encontrada", http.StatusNotFound)
 		return
 	}
 

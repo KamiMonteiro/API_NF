@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -32,6 +33,7 @@ func GetItensNotaHandler(w http.ResponseWriter, r *http.Request) {
 	// Filtrar itens com quantidade e valor > 0
 	var itensValidos []Item
 	for _, item := range notaEncontrada.Itens {
+		log.Printf("Item recebido: %+v", item)
 		if item.Quantidade > 0 && item.ValorUnitario > 0 {
 			itensValidos = append(itensValidos, item)
 		}

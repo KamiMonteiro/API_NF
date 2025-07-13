@@ -10,6 +10,7 @@ import (
 var notas []NotaFiscal // variável global para armazenar as notas
 
 func LoadNotasFiscais() {
+	//log.Printf("Notas carregadas: %+v\n", notas)
 	file, err := os.Open("itens.json")
 	if err != nil {
 		log.Fatalf("Erro ao abrir o arquivo JSON: %v", err)

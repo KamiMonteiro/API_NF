@@ -8,9 +8,9 @@ import (
 func main() {
 	InitDatadabe()
 
-	http.HandleFunc("/notas/", GetItensNotasHandler)
+	http.HandleFunc("/notas/", GetItensNotaHandler)
 
 	log.Println("API rodando em http://localhost:8080")
-	log.Fatal(http.ListenAndServer(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }

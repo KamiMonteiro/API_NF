@@ -103,5 +103,5 @@ Verifica se a API está online.
 
 ## 🙋‍♀️ Autora
 
-**Cami Monteiro**  
+**Camila Monteiro**  
 Estudante e desenvolvedora com foco em backend, APIs RESTful e sistemas de dados.

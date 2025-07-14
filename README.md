@@ -21,3 +21,17 @@ Este projeto implementa uma API RESTful simples em Go (sem frameworks externos) 
 
 ```bash
 go run main.go database.go handlers.go models.go
+
+
+📂 Estrutura dos Arquivos
+itens.json: contém as notas fiscais com seus respectivos itens
+
+notas.csv: contém dados fiscais detalhados (empresa, CNPJ, valor total, etc)
+
+main.go: inicia a API e registra as rotas
+
+handlers.go: contém os endpoints HTTP
+
+database.go: faz leitura dos arquivos JSON e CSV na inicialização
+
+models.go: define as structs (modelos de dados)
